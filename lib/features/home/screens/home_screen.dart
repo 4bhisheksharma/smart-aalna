@@ -1,8 +1,95 @@
 import 'package:flutter/material.dart';
+import 'package:smart_aalna/core/storage/local_storage.dart';
 import 'package:smart_aalna/core/widgets/welcome_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _localStorage = LocalStorage();
+  String _userName = 'Rame';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final savedName = await _localStorage.getHomeUserName();
+
+    if (!mounted || savedName == null || savedName.trim().isEmpty) {
+      return;
+    }
+
+    setState(() {
+      _userName = savedName.trim();
+    });
+  }
+
+  Future<void> _saveUserName(String name) async {
+    final cleanedName = name.trim();
+    if (cleanedName.isEmpty) {
+      return;
+    }
+
+    await _localStorage.setHomeUserName(cleanedName);
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _userName = cleanedName;
+    });
+  }
+
+  Future<void> _showNameEditor() async {
+    var draftName = _userName;
+
+    final updatedName = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Update your name'),
+          content: TextFormField(
+            initialValue: _userName,
+            autofocus: true,
+            textInputAction: TextInputAction.done,
+            decoration: const InputDecoration(hintText: 'Enter your name'),
+            onChanged: (value) {
+              draftName = value;
+            },
+            onFieldSubmitted: (_) {
+              Navigator.of(dialogContext).pop(draftName);
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(draftName);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (!mounted || updatedName == null) {
+      return;
+    }
+
+    await _saveUserName(updatedName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +147,10 @@ class HomeScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: WelcomeCard(
-                      userName: 'Rame',
+                      userName: _userName,
                       message:
                           'Today is 27°C. Your top match is a linen shirt + chinos.',
-                      onTap: () {},
+                      onTap: _showNameEditor,
                     ),
                   ),
                 ),
