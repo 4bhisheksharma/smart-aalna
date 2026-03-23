@@ -120,7 +120,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F6F6),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text(
           'Chat with आल्ना AI',
@@ -173,7 +173,9 @@ class _ChatScreenState extends State<ChatScreen> {
           maxWidth: MediaQuery.of(context).size.width * 0.8,
         ),
         decoration: BoxDecoration(
-          color: isUser ? Theme.of(context).primaryColor : Colors.white,
+          color: isUser
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(16).copyWith(
             bottomRight: isUser
                 ? const Radius.circular(0)
@@ -184,7 +186,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(13),
+              color: Theme.of(context).shadowColor.withAlpha(15),
               blurRadius: 5,
               offset: const Offset(0, 2),
             ),
@@ -197,7 +199,9 @@ class _ChatScreenState extends State<ChatScreen> {
             Text(
               msg.text,
               style: TextStyle(
-                color: isUser ? Colors.white : Colors.black87,
+                color: isUser
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.onSurface,
                 fontSize: 15,
               ),
             ),
@@ -221,7 +225,11 @@ class _ChatScreenState extends State<ChatScreen> {
                             height: 95,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey.shade200),
+                              border: Border.all(
+                                color: Theme.of(
+                                  context,
+                                ).dividerColor.withAlpha(50),
+                              ),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
@@ -230,10 +238,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) =>
                                     Container(
-                                      color: Colors.grey.shade200,
-                                      child: const Icon(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceContainerHighest,
+                                      child: Icon(
                                         Icons.image_not_supported,
-                                        color: Colors.grey,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
                                       ),
                                     ),
                               ),
@@ -270,10 +282,10 @@ class _ChatScreenState extends State<ChatScreen> {
     return Container(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(13),
+            color: Theme.of(context).shadowColor.withAlpha(15),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -285,6 +297,9 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: TextField(
                 controller: _textController,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
                 decoration: InputDecoration(
                   hintText: 'Ask for outfit ideas...',
                   border: OutlineInputBorder(
@@ -292,7 +307,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: const Color(0xFFF6F6F6),
+                  fillColor: Theme.of(context).scaffoldBackgroundColor,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 14,
@@ -307,8 +322,12 @@ class _ChatScreenState extends State<ChatScreen> {
               onTap: _isLoading ? null : _sendMessage,
               child: CircleAvatar(
                 radius: 24,
-                backgroundColor: Theme.of(context).primaryColor,
-                child: const Icon(Icons.send, color: Colors.white, size: 20),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                child: Icon(
+                  Icons.send,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  size: 20,
+                ),
               ),
             ),
           ],

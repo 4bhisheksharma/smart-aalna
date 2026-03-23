@@ -78,7 +78,7 @@ class _AddedClothesScreenState extends State<AddedClothesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F6F6),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text(
           'Added Clothes in आल्ना',
@@ -160,7 +160,7 @@ class _ClothingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: const [
           BoxShadow(
@@ -191,7 +191,9 @@ class _ClothingCard extends StatelessWidget {
                   ),
                   if (item.inLaundry)
                     Container(
-                      color: Colors.white.withAlpha(150),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.surface.withAlpha(150),
                       child: const Center(
                         child: Text(
                           'Washing...',
@@ -207,7 +209,7 @@ class _ClothingCard extends StatelessWidget {
                     left: 4,
                     child: IconButton(
                       icon: const Icon(Icons.delete_outline, size: 20),
-                      color: Colors.black54,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       onPressed: onDelete,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -225,7 +227,7 @@ class _ClothingCard extends StatelessWidget {
                       ),
                       color: item.inLaundry
                           ? Colors.blueAccent
-                          : Colors.black54,
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                       onPressed: onToggleLaundry,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -272,7 +274,7 @@ class _ClothingCard extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: Color(item.colorValue),
                           border: Border.all(
-                            color: Colors.grey.shade300,
+                            color: Theme.of(context).dividerColor.withAlpha(50),
                             width: 1,
                           ),
                         ),
@@ -282,14 +284,22 @@ class _ClothingCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     '${item.category} • ${item.size}',
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
                     item.occasion,
-                    style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
+                    style: TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurfaceVariant.withAlpha(150),
+                      fontSize: 11,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

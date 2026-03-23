@@ -11,7 +11,7 @@ class AddClothesSectionTitle extends StatelessWidget {
       title,
       style: Theme.of(context).textTheme.titleSmall?.copyWith(
         fontWeight: FontWeight.w700,
-        color: const Color(0xFF171717),
+        color: Theme.of(context).colorScheme.onSurface,
       ),
     );
   }

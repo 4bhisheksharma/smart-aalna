@@ -17,7 +17,7 @@ class AddClothesColorSelector extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFFE0E0E0)),
+        border: Border.all(color: Theme.of(context).dividerColor.withAlpha(50)),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -28,7 +28,9 @@ class AddClothesColorSelector extends StatelessWidget {
             decoration: BoxDecoration(
               color: selectedColor,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.black12),
+              border: Border.all(
+                color: Theme.of(context).dividerColor.withAlpha(50),
+              ),
             ),
           ),
           const SizedBox(width: 12),

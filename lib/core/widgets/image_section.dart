@@ -30,9 +30,9 @@ class AddClothesImageSection extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE5E5E5)),
+        border: Border.all(color: Theme.of(context).dividerColor.withAlpha(50)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,9 +41,11 @@ class AddClothesImageSection extends StatelessWidget {
             aspectRatio: 1,
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFF3F3F3),
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE1E1E1)),
+                border: Border.all(
+                  color: Theme.of(context).dividerColor.withAlpha(50),
+                ),
               ),
               child: isProcessing
                   ? const ShimmerSkeleton(

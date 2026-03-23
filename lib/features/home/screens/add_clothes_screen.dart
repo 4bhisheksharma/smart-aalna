@@ -16,6 +16,7 @@ import 'package:smart_aalna/core/widgets/image_section.dart';
 import 'package:smart_aalna/core/widgets/section_title.dart';
 import 'package:smart_aalna/features/home/model/clothing_item.dart';
 import 'package:smart_aalna/core/storage/local_storage.dart';
+import 'package:smart_aalna/features/home/screens/main_screen.dart';
 
 class AddClothesScreen extends StatefulWidget {
   const AddClothesScreen({super.key});
@@ -387,6 +388,13 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
         _otherOccasionController.clear();
       }
     });
+
+    // Navigate to Added Clothes screen
+    // Using Navigator.pushAndRemoveUntil to reset MainScreen to tab 2
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const MainScreen(initialIndex: 2)),
+      (route) => false,
+    );
   }
 
   @override

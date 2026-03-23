@@ -18,7 +18,7 @@ class AddClothesHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF111111),
+              color: theme.colorScheme.onSurface,
             ),
           ),
         ),

@@ -234,7 +234,7 @@ class _AddedClothesDescScreeState extends State<AddedClothesDescScree> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F6F6),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text(
           'Edit Clothing',
@@ -270,7 +270,9 @@ class _AddedClothesDescScreeState extends State<AddedClothesDescScree> {
                           widget.item.colorValue,
                         ).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.grey.shade300),
+                        border: Border.all(
+                          color: Theme.of(context).dividerColor.withAlpha(50),
+                        ),
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: _newImageBytes != null

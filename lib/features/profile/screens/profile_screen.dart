@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F6F6),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text(
           'Profile',
@@ -77,11 +77,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 width: 200,
                 height: 200,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha(13),
+                      color: Theme.of(context).shadowColor.withAlpha(13),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),
@@ -98,11 +98,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Name Edit
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha(13),
+                      color: Theme.of(context).shadowColor.withAlpha(13),
                       blurRadius: 5,
                       offset: const Offset(0, 2),
                     ),
@@ -130,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
-                        fillColor: const Color(0xFFF6F6F6),
+                        fillColor: Theme.of(context).scaffoldBackgroundColor,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 14,
@@ -153,11 +153,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Stats
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha(13),
+                      color: Theme.of(context).shadowColor.withAlpha(13),
                       blurRadius: 5,
                       offset: const Offset(0, 2),
                     ),

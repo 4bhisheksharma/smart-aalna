@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final colors = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F6F6),
+      backgroundColor: theme.scaffoldBackgroundColor,
 
       body: Stack(
         children: [
@@ -229,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.w700,
-                                color: const Color(0xFF111111),
+                                color: theme.colorScheme.onSurface,
                               ),
                             ),
                           ),
@@ -247,11 +247,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: double.infinity,
                           padding: EdgeInsets.all(isCompact ? 16 : 22),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: theme.colorScheme.surface,
                             borderRadius: BorderRadius.circular(24),
-                            boxShadow: const [
+                            boxShadow: [
                               BoxShadow(
-                                color: Color(0x1A000000),
+                                color: theme.shadowColor.withAlpha(25),
                                 offset: Offset(0, 14),
                                 blurRadius: 24,
                                 spreadRadius: -12,
@@ -285,7 +285,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         style: theme.textTheme.titleLarge
                                             ?.copyWith(
                                               fontWeight: FontWeight.w700,
-                                              color: const Color(0xFF151515),
+                                              color:
+                                                  theme.colorScheme.onSurface,
                                             ),
                                       ),
                                     ),
@@ -348,7 +349,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(12),
-                                                  color: Colors.grey[200],
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .surfaceContainerHighest,
                                                   image: DecorationImage(
                                                     image: FileImage(
                                                       File(item.imagePath),
@@ -372,9 +375,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       ?.copyWith(
                                                         fontWeight:
                                                             FontWeight.w600,
-                                                        color: const Color(
-                                                          0xFF222222,
-                                                        ),
+                                                        color: Theme.of(
+                                                          context,
+                                                        ).colorScheme.onSurface,
                                                       ),
                                                 ),
                                               ),
@@ -388,17 +391,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                     width: double.infinity,
                                     padding: const EdgeInsets.all(18),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFF7F7F7),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .surfaceContainerHighest
+                                          .withAlpha(100),
                                       borderRadius: BorderRadius.circular(18),
                                       border: Border.all(
-                                        color: const Color(0xFFEBEBEB),
+                                        color: Theme.of(
+                                          context,
+                                        ).dividerColor.withAlpha(50),
                                       ),
                                     ),
                                     child: Text(
                                       _aiMessage,
                                       style: theme.textTheme.bodyMedium
                                           ?.copyWith(
-                                            color: const Color(0xFF3F3F3F),
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant,
                                             height: 1.4,
                                           ),
                                     ),
@@ -433,13 +443,21 @@ class _HomeBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFFF1F1F1), Color(0xFFF7F7F7), Color(0xFFFFFFFF)],
-          stops: [0.0, 0.5, 1.0],
+          colors: [
+            theme.scaffoldBackgroundColor,
+            isDark ? const Color(0xFF1A1A1A) : const Color(0xFFF7F7F7),
+            theme.colorScheme.surface,
+          ],
+          stops: const [0.0, 0.5, 1.0],
         ),
       ),
       child: Stack(
@@ -449,7 +467,7 @@ class _HomeBackground extends StatelessWidget {
             right: -50,
             child: _BlurOrb(
               size: 210,
-              color: const Color(0xFF000000).withAlpha(10),
+              color: Theme.of(context).shadowColor.withAlpha(10),
             ),
           ),
           Positioned(
@@ -457,7 +475,7 @@ class _HomeBackground extends StatelessWidget {
             left: -64,
             child: _BlurOrb(
               size: 170,
-              color: const Color(0xFF000000).withAlpha(10),
+              color: Theme.of(context).shadowColor.withAlpha(10),
             ),
           ),
         ],
