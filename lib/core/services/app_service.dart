@@ -8,23 +8,33 @@ class AppService {
   final String _openRouterUrl = 'https://openrouter.ai/api/v1/chat/completions';
 
   Future<OutfitSuggestion?> getOutfitSuggestion(
-    List<ClothingItem> clothes,
-  ) async {
-    if (clothes.isEmpty) return null;
+    List<ClothingItem> clothes, {
+    String query = 'What should I wear today?',
+  }) async {
+    if (clothes.isEmpty && query == 'What should I wear today?') return null;
 
     final apiKey = dotenv.env['APIKEY'];
     if (apiKey == null || apiKey.isEmpty) return null;
 
-    final clothesListStr = clothes
-        .map(
-          (c) =>
-              'ID: ${c.id}, Type: ${c.type}, Category: ${c.category}, Season: ${c.season}, Occasion: ${c.occasion}, Color: ${c.colorValue}',
-        )
-        .join('\n');
+    final clothesListStr = clothes.isEmpty
+        ? 'No clothes in wardrobe.'
+        : clothes
+              .map(
+                (c) =>
+                    'ID: ${c.id}, Type: ${c.type}, Category: ${c.category}, Season: ${c.season}, Occasion: ${c.occasion}, Color: ${c.colorValue}',
+              )
+              .join('\n');
 
     final systemPrompt =
         '''
 ${AppUtils.systemPrompt}
+You are a helpful AI stylist. The user may ask for suggestions on what to wear for a specific occasion. 
+Please recommend items they have in their wardrobe. If appropriate, you can also suggest 1-2 new items they don't have yet (as a "cherry on top" suggestion) in your text message.
+Always return your response in purely JSON format:
+{
+  "message": "Your styling advice and any new item suggestions to buy.",
+  "items": ["id_1", "id_2"]
+}
 
 Available wardrobe items:
 $clothesListStr
@@ -43,7 +53,7 @@ $clothesListStr
           'model': 'nvidia/nemotron-3-nano-30b-a3b:free',
           'messages': [
             {'role': 'system', 'content': systemPrompt},
-            {'role': 'user', 'content': 'What should I wear today?'},
+            {'role': 'user', 'content': query},
           ],
           'temperature': 0.7,
         }),
