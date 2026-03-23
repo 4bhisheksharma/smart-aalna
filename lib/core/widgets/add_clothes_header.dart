@@ -23,28 +23,6 @@ class AddClothesHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        Container(
-          width: 42,
-          height: 42,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x1A000000),
-                offset: Offset(0, 8),
-                blurRadius: 18,
-                spreadRadius: -8,
-              ),
-            ],
-          ),
-          child: IconButton(
-            onPressed: () => Navigator.of(context).pushNamed('/added-clothes'),
-            icon: const Icon(Icons.local_laundry_service),
-            color: const Color(0xFF111111),
-            tooltip: 'Added Clothes',
-          ),
-        ),
       ],
     );
   }

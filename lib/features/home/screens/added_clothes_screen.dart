@@ -20,6 +20,13 @@ class _AddedClothesScreenState extends State<AddedClothesScreen> {
   void initState() {
     super.initState();
     _loadClothes();
+    LocalStorage.clothesUpdateNotifier.addListener(_loadClothes);
+  }
+
+  @override
+  void dispose() {
+    LocalStorage.clothesUpdateNotifier.removeListener(_loadClothes);
+    super.dispose();
   }
 
   Future<void> _loadClothes() async {
@@ -74,7 +81,7 @@ class _AddedClothesScreenState extends State<AddedClothesScreen> {
       backgroundColor: const Color(0xFFF6F6F6),
       appBar: AppBar(
         title: const Text(
-          'Added Clothes',
+          'Added Clothes in आल्ना',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         backgroundColor: Colors.transparent,

@@ -375,7 +375,18 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Clothing item saved.')));
-    Navigator.of(context).popAndPushNamed('/added-clothes');
+
+    // Reset form
+    setState(() {
+      _originalImageBytes = null;
+      _removedBgImageBytes = null;
+      _processedImageBytes = null;
+      _showingOriginal = false;
+      _notesController.clear();
+      if (_selectedOccasion == 'Other') {
+        _otherOccasionController.clear();
+      }
+    });
   }
 
   @override
@@ -395,7 +406,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
               ),
               child: Column(
                 children: [
-                  const AddClothesHeader(title: 'Add Clothes in Smart आल्ना'),
+                  const AddClothesHeader(title: 'Add Clothes in आल्ना'),
                   SizedBox(height: isCompact ? 16 : 24),
                   Expanded(
                     child: SingleChildScrollView(

@@ -29,6 +29,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _loadUserName();
     _loadData();
+    LocalStorage.clothesUpdateNotifier.addListener(_loadData);
+  }
+
+  @override
+  void dispose() {
+    LocalStorage.clothesUpdateNotifier.removeListener(_loadData);
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -148,10 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamed('/add-clothes'),
-        child: const Icon(Icons.add_photo_alternate_outlined),
-      ),
+
       body: Stack(
         children: [
           const _HomeBackground(),
@@ -180,31 +184,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontWeight: FontWeight.w700,
                                 color: const Color(0xFF111111),
                               ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Container(
-                            width: 42,
-                            height: 42,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(14),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x1A000000),
-                                  offset: Offset(0, 8),
-                                  blurRadius: 18,
-                                  spreadRadius: -8,
-                                ),
-                              ],
-                            ),
-                            child: IconButton(
-                              onPressed: () => Navigator.of(
-                                context,
-                              ).pushNamed('/added-clothes'),
-                              icon: const Icon(Icons.local_laundry_service),
-                              color: const Color(0xFF111111),
-                              tooltip: 'Added Clothes',
                             ),
                           ),
                         ],

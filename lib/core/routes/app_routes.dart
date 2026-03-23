@@ -3,6 +3,7 @@ import 'package:smart_aalna/features/home/screens/add_clothes_screen.dart';
 import 'package:smart_aalna/features/home/screens/added_clothes_screen.dart';
 import 'package:smart_aalna/features/home/screens/added_clothes_desc_scree.dart';
 import 'package:smart_aalna/features/home/screens/home_screen.dart';
+import 'package:smart_aalna/features/home/screens/main_screen.dart';
 import 'package:smart_aalna/features/home/model/clothing_item.dart';
 
 class AppRoutes {
@@ -19,7 +20,7 @@ class AppRouter {
       case AppRoutes.home:
       case AppRoutes.customerHome:
         return MaterialPageRoute(
-          builder: (_) => const HomeScreen(),
+          builder: (_) => const MainScreen(),
           settings: settings,
         );
 
@@ -43,7 +44,7 @@ class AppRouter {
 
       default:
         return MaterialPageRoute(
-          builder: (_) => const HomeScreen(),
+          builder: (_) => const MainScreen(),
           settings: settings,
         );
     }

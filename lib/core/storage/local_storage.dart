@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_aalna/features/home/model/clothing_item.dart';
 
 class LocalStorage {
   static const String _homeUserNameKey = 'home_user_name';
   static const String _clothesKey = 'saved_clothes';
+
+  static final ValueNotifier<int> clothesUpdateNotifier = ValueNotifier<int>(0);
 
   Future<List<ClothingItem>> getClothes() async {
     final preferences = await SharedPreferences.getInstance();
@@ -20,6 +23,7 @@ class LocalStorage {
         preferences.getStringList(_clothesKey) ?? [];
     clothesJson.add(item.toJson());
     await preferences.setStringList(_clothesKey, clothesJson);
+    clothesUpdateNotifier.value++;
   }
 
   Future<void> deleteCloth(String id) async {
@@ -33,6 +37,7 @@ class LocalStorage {
     }).toList();
 
     await preferences.setStringList(_clothesKey, updatedList);
+    clothesUpdateNotifier.value++;
   }
 
   Future<String?> getHomeUserName() async {
