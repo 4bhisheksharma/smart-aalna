@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_aalna/core/theme/app_theme.dart';
 import 'package:smart_aalna/features/home/screens/home_screen.dart';
 
 void main() {
@@ -10,9 +11,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(body: HomeScreen()),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: ThemeMode.system,
+      home: const HomeScreen(),
     );
   }
 }

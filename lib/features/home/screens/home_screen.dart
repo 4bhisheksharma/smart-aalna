@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_aalna/core/storage/local_storage.dart';
+import 'package:smart_aalna/core/widgets/app_button.dart';
 import 'package:smart_aalna/core/widgets/welcome_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -102,160 +103,145 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           const _HomeBackground(),
           SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Smart आल्ना',
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF111111),
-                          ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Smart आल्ना',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF111111),
                         ),
-                        const Spacer(),
-                        Container(
-                          width: 42,
-                          height: 42,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(14),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x1F115E59),
-                                offset: Offset(0, 8),
-                                blurRadius: 18,
-                                spreadRadius: -8,
-                              ),
-                            ],
-                          ),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.notifications_none_rounded),
-                            color: const Color(0xFF111111),
-                            tooltip: 'Notifications',
-                          ),
+                      ),
+                      const Spacer(),
+                      Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x1A000000),
+                              offset: Offset(0, 8),
+                              blurRadius: 18,
+                              spreadRadius: -8,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: WelcomeCard(
-                      userName: _userName,
-                      message:
-                          'Today is 27°C. Your top match is a linen shirt + chinos.',
-                      onTap: _showNameEditor,
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 22, 20, 10),
-                    child: Text(
-                      'Quick Actions',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF151515),
-                      ),
-                    ),
-                  ),
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  sliver: SliverGrid.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: 1.35,
-                    children: const [
-                      _ActionTile(
-                        icon: Icons.checkroom_rounded,
-                        label: 'Build Outfit',
-                        accent: Color(0xFF181818),
-                      ),
-                      _ActionTile(
-                        icon: Icons.wb_sunny_rounded,
-                        label: 'Weather Match',
-                        accent: Color(0xFF232323),
-                      ),
-                      _ActionTile(
-                        icon: Icons.style_rounded,
-                        label: 'Closet Planner',
-                        accent: Color(0xFF2D2D2D),
-                      ),
-                      _ActionTile(
-                        icon: Icons.psychology_alt_rounded,
-                        label: 'AI Stylist',
-                        accent: Color(0xFF0F0F0F),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.notifications_none_rounded),
+                          color: const Color(0xFF111111),
+                          tooltip: 'Notifications',
+                        ),
                       ),
                     ],
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 22, 20, 28),
+                  const SizedBox(height: 12),
+                  WelcomeCard(
+                    userName: _userName,
+                    message:
+                        'Today is 27°C. Your top match is a linen shirt + chinos.',
+                    onTap: _showNameEditor,
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
                     child: Container(
-                      padding: const EdgeInsets.all(18),
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(22),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: const [
                           BoxShadow(
-                            color: Color(0x1F115E59),
+                            color: Color(0x1A000000),
                             offset: Offset(0, 14),
                             blurRadius: 24,
                             spreadRadius: -12,
                           ),
                         ],
                       ),
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: colors.primary.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            child: Icon(
-                              Icons.workspace_premium_rounded,
-                              color: colors.primary,
-                            ),
-                          ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Today\'s Best Outfit',
-                                  style: theme.textTheme.titleSmall?.copyWith(
+                          Row(
+                            children: [
+                              Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: colors.primary.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: Icon(
+                                  Icons.workspace_premium_rounded,
+                                  color: colors.primary,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Today\'s Outfit',
+                                  style: theme.textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.w700,
                                     color: const Color(0xFF151515),
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Sky blue oxford + beige chinos + white sneakers. Comfort score: 94%.',
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: const Color(0xFF444444),
-                                  ),
-                                ),
-                              ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            'Sky blue oxford + beige chinos + white sneakers.',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF222222),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Comfort score: 94% • Weather fit: Excellent',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: const Color(0xFF555555),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(18),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF7F7F7),
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color: const Color(0xFFEBEBEB),
+                              ),
+                            ),
+                            child: Text(
+                              'AI Note: Swap to a lightweight overshirt for evening breeze and keep white sneakers for clean contrast.',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: const Color(0xFF3F3F3F),
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          SizedBox(
+                            width: double.infinity,
+                            child: AppButton(
+                              onPressed: () {},
+                              label: 'Reshuffle My Outfit',
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -294,60 +280,6 @@ class _HomeBackground extends StatelessWidget {
             child: _BlurOrb(
               size: 170,
               color: const Color(0xFF000000).withOpacity(0.04),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ActionTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color accent;
-
-  const _ActionTile({
-    required this.icon,
-    required this.label,
-    required this.accent,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: accent.withOpacity(0.2)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x16000000),
-            offset: Offset(0, 12),
-            blurRadius: 20,
-            spreadRadius: -12,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: accent.withOpacity(0.14),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: accent, size: 22),
-          ),
-          const Spacer(),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF191919),
             ),
           ),
         ],
