@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         Text(
-                          'Aalna Wardrobe AI',
+                          'Smart आल्ना',
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: const Color(0xFF111111),

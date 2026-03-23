@@ -47,16 +47,13 @@ class WelcomeCard extends StatelessWidget {
                 top: -18,
                 child: _GlowCircle(
                   size: 110,
-                  color: Colors.white.withOpacity(0.18),
+                  color: Colors.white.withAlpha(46),
                 ),
               ),
               Positioned(
                 left: -20,
                 bottom: -26,
-                child: _GlowCircle(
-                  size: 90,
-                  color: Colors.white.withOpacity(0.16),
-                ),
+                child: _GlowCircle(size: 90, color: Colors.white.withAlpha(20)),
               ),
               Padding(
                 padding: const EdgeInsets.all(22),
@@ -67,11 +64,9 @@ class WelcomeCard extends StatelessWidget {
                       width: 52,
                       height: 52,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.08),
+                        color: Colors.white.withAlpha(20),
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.2),
-                        ),
+                        border: Border.all(color: Colors.white.withAlpha(51)),
                       ),
                       child: const Icon(
                         Icons.waving_hand_rounded,
@@ -122,11 +117,11 @@ class WelcomeCard extends StatelessWidget {
                                 vertical: 8,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.12),
+                                color: Colors.white.withAlpha(20),
                                 borderRadius: BorderRadius.circular(999),
                               ),
                               child: const Text(
-                                'Tap to continue',
+                                'Tap to Change Name',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
