@@ -99,6 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.of(context).pushNamed('/add-clothes'),
+        child: const Icon(Icons.add_photo_alternate_outlined),
+      ),
       body: Stack(
         children: [
           const _HomeBackground(),
@@ -174,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: 48,
                                 height: 48,
                                 decoration: BoxDecoration(
-                                  color: colors.primary.withOpacity(0.12),
+                                  color: colors.primary.withAlpha(20),
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                                 child: Icon(
@@ -228,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          const Spacer(),
+                          SizedBox(height: 50),
                           SizedBox(
                             width: double.infinity,
                             child: AppButton(
@@ -271,7 +275,7 @@ class _HomeBackground extends StatelessWidget {
             right: -50,
             child: _BlurOrb(
               size: 210,
-              color: const Color(0xFF000000).withOpacity(0.05),
+              color: const Color(0xFF000000).withAlpha(10),
             ),
           ),
           Positioned(
@@ -279,7 +283,7 @@ class _HomeBackground extends StatelessWidget {
             left: -64,
             child: _BlurOrb(
               size: 170,
-              color: const Color(0xFF000000).withOpacity(0.04),
+              color: const Color(0xFF000000).withAlpha(10),
             ),
           ),
         ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smart_aalna/core/routes/app_routes.dart';
 import 'package:smart_aalna/core/theme/app_theme.dart';
-import 'package:smart_aalna/features/home/screens/home_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -16,7 +16,8 @@ class MainApp extends StatelessWidget {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.system,
-      home: const HomeScreen(),
+      initialRoute: AppRoutes.home,
+      onGenerateRoute: AppRouter.onGenerateRoute,
     );
   }
 }
