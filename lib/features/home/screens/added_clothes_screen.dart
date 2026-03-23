@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:smart_aalna/features/home/model/clothing_item.dart';
 import 'package:smart_aalna/core/storage/local_storage.dart';
+import 'package:smart_aalna/core/widgets/shimmer_skeleton.dart';
 
 class AddedClothesScreen extends StatefulWidget {
   const AddedClothesScreen({super.key});
@@ -81,7 +82,23 @@ class _AddedClothesScreenState extends State<AddedClothesScreen> {
         surfaceTintColor: Colors.transparent,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 0.75,
+              ),
+              itemCount: 6,
+              itemBuilder: (context, index) {
+                return const ShimmerSkeleton(
+                  width: double.infinity,
+                  height: double.infinity,
+                  borderRadius: 24,
+                );
+              },
+            )
           : _clothes.isEmpty
           ? const Center(child: Text('No clothes added yet.'))
           : GridView.builder(

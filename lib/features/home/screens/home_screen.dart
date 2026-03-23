@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:smart_aalna/core/storage/local_storage.dart';
 import 'package:smart_aalna/core/widgets/app_button.dart';
 import 'package:smart_aalna/core/widgets/welcome_card.dart';
+import 'package:smart_aalna/core/services/app_service.dart';
+import 'package:smart_aalna/features/home/model/clothing_item.dart';
+import 'package:smart_aalna/core/widgets/shimmer_skeleton.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,12 +16,57 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _localStorage = LocalStorage();
+  final _appService = AppService();
   String _userName = 'User';
+
+  bool _isLoadingOutfit = true;
+  String _aiMessage = '';
+  List<ClothingItem> _suggestedItems = [];
+  List<ClothingItem> _allClothes = [];
 
   @override
   void initState() {
     super.initState();
     _loadUserName();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      _isLoadingOutfit = true;
+    });
+
+    final clothes = await _localStorage.getClothes();
+
+    if (!mounted) return;
+    setState(() {
+      _allClothes = clothes;
+    });
+
+    if (clothes.isNotEmpty) {
+      final suggestion = await _appService.getOutfitSuggestion(clothes);
+      if (mounted && suggestion != null) {
+        setState(() {
+          _aiMessage = suggestion.message;
+          _suggestedItems = clothes
+              .where((c) => suggestion.itemIds.contains(c.id))
+              .toList();
+          _isLoadingOutfit = false;
+        });
+      } else {
+        if (mounted) {
+          setState(() {
+            _isLoadingOutfit = false;
+            _aiMessage = 'Could not generate suggestion at this time.';
+          });
+        }
+      }
+    } else {
+      setState(() {
+        _isLoadingOutfit = false;
+        _aiMessage = 'Add some clothes to your wardrobe first!';
+      });
+    }
   }
 
   Future<void> _loadUserName() async {
@@ -163,8 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(height: isCompact ? 10 : 12),
                       WelcomeCard(
                         userName: _userName,
-                        message:
-                            'Today is 27°C. Your top match is a linen shirt + chinos.',
+                        message: 'Here is your outfit suggestion for today.',
                         onTap: _showNameEditor,
                       ),
                       SizedBox(height: isCompact ? 12 : 16),
@@ -218,42 +266,123 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                                 SizedBox(height: isCompact ? 14 : 20),
-                                Text(
-                                  'Sky blue oxford + beige chinos + white sneakers.',
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xFF222222),
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Comfort score: 94% • Weather fit: Excellent',
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: const Color(0xFF555555),
-                                  ),
-                                ),
-                                SizedBox(height: isCompact ? 14 : 20),
-                                Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(18),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF7F7F7),
-                                    borderRadius: BorderRadius.circular(18),
-                                    border: Border.all(
-                                      color: const Color(0xFFEBEBEB),
+                                if (_isLoadingOutfit)
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 120,
+                                        child: ListView.separated(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: 3,
+                                          separatorBuilder: (_, __) =>
+                                              const SizedBox(width: 12),
+                                          itemBuilder: (_, __) => Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: const [
+                                              ShimmerSkeleton(
+                                                width: 100,
+                                                height: 100,
+                                              ),
+                                              SizedBox(height: 8),
+                                              ShimmerSkeleton(
+                                                width: 80,
+                                                height: 12,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: isCompact ? 14 : 20),
+                                      const ShimmerSkeleton(
+                                        width: double.infinity,
+                                        height: 80,
+                                        borderRadius: 18,
+                                      ),
+                                    ],
+                                  )
+                                else ...[
+                                  if (_suggestedItems.isNotEmpty)
+                                    SizedBox(
+                                      height: 160,
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: _suggestedItems.length,
+                                        separatorBuilder: (context, index) =>
+                                            const SizedBox(width: 12),
+                                        itemBuilder: (context, index) {
+                                          final item = _suggestedItems[index];
+                                          return Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                width: 100,
+                                                height: 100,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  color: Colors.grey[200],
+                                                  image: DecorationImage(
+                                                    image: FileImage(
+                                                      File(item.imagePath),
+                                                    ),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              SizedBox(
+                                                width: 100,
+                                                child: Text(
+                                                  item.type,
+                                                  maxLines: 2,
+                                                  textAlign: TextAlign.center,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: const Color(
+                                                          0xFF222222,
+                                                        ),
+                                                      ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  SizedBox(height: isCompact ? 14 : 20),
+                                  Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(18),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF7F7F7),
+                                      borderRadius: BorderRadius.circular(18),
+                                      border: Border.all(
+                                        color: const Color(0xFFEBEBEB),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      _aiMessage,
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            color: const Color(0xFF3F3F3F),
+                                            height: 1.4,
+                                          ),
                                     ),
                                   ),
-                                  child: Text(
-                                    'AI Note: Swap to a lightweight overshirt for evening breeze and keep white sneakers for clean contrast.',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      color: const Color(0xFF3F3F3F),
-                                      height: 1.4,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: isCompact ? 14 : 18),
+                                ],
+                                SizedBox(height: isCompact ? 12 : 14),
                                 AppButton(
-                                  onPressed: () {},
+                                  onPressed: _isLoadingOutfit
+                                      ? () {}
+                                      : _loadData,
                                   label: 'Reshuffle My Outfit',
                                 ),
                               ],

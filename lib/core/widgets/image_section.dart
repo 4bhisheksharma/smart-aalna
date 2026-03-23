@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:smart_aalna/core/widgets/shimmer_skeleton.dart';
 import 'package:smart_aalna/core/widgets/app_button.dart';
 
 class AddClothesImageSection extends StatelessWidget {
@@ -45,7 +46,11 @@ class AddClothesImageSection extends StatelessWidget {
                 border: Border.all(color: const Color(0xFFE1E1E1)),
               ),
               child: isProcessing
-                  ? const Center(child: CircularProgressIndicator())
+                  ? const ShimmerSkeleton(
+                      width: double.infinity,
+                      height: 250,
+                      borderRadius: 12,
+                    )
                   : hasImage
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(12),

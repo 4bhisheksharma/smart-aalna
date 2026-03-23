@@ -48,6 +48,15 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     'Bottom': ['Jeans', 'Pants'],
     'Outerwear': ['Jacket', 'Coat'],
     'Footwear': ['Shoes'],
+    'Accessories': [
+      'Watch',
+      'Ring',
+      'Necklace',
+      'Bracelet',
+      'Glasses',
+      'Hat',
+      'Belt',
+    ],
   };
 
   Uint8List? _originalImageBytes;

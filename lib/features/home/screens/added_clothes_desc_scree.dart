@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui;
 import 'package:smart_aalna/features/home/model/clothing_item.dart';
 import 'package:smart_aalna/core/storage/local_storage.dart';
+import 'package:smart_aalna/core/widgets/shimmer_skeleton.dart';
 import 'package:smart_aalna/core/widgets/app_button.dart';
 
 class AddedClothesDescScree extends StatefulWidget {
@@ -55,6 +56,15 @@ class _AddedClothesDescScreeState extends State<AddedClothesDescScree> {
     'Bottom': ['Jeans', 'Pants'],
     'Outerwear': ['Jacket', 'Coat'],
     'Footwear': ['Shoes'],
+    'Accessories': [
+      'Watch',
+      'Ring',
+      'Necklace',
+      'Bracelet',
+      'Glasses',
+      'Hat',
+      'Belt',
+    ],
   };
 
   @override
@@ -240,7 +250,12 @@ class _AddedClothesDescScreeState extends State<AddedClothesDescScree> {
             if (_isProcessingImage)
               const SizedBox(
                 height: 250,
-                child: Center(child: CircularProgressIndicator()),
+                width: double.infinity,
+                child: ShimmerSkeleton(
+                  width: double.infinity,
+                  height: 250,
+                  borderRadius: 24,
+                ),
               )
             else
               GestureDetector(
