@@ -12,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _localStorage = LocalStorage();
-  String _userName = 'Rame';
+  String _userName = 'User';
 
   @override
   void initState() {
@@ -107,145 +107,164 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           const _HomeBackground(),
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-              child: Column(
-                children: [
-                  Row(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isCompact = constraints.maxWidth < 380;
+
+                return Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    isCompact ? 14 : 20,
+                    isCompact ? 12 : 16,
+                    isCompact ? 14 : 20,
+                    20,
+                  ),
+                  child: Column(
                     children: [
-                      Text(
-                        'Smart आल्ना',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF111111),
-                        ),
-                      ),
-                      const Spacer(),
-                      Container(
-                        width: 42,
-                        height: 42,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(14),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0x1A000000),
-                              offset: Offset(0, 8),
-                              blurRadius: 18,
-                              spreadRadius: -8,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Smart आल्ना',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF111111),
+                              ),
                             ),
-                          ],
-                        ),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.notifications_none_rounded),
-                          color: const Color(0xFF111111),
-                          tooltip: 'Notifications',
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            width: 42,
+                            height: 42,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(14),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x1A000000),
+                                  offset: Offset(0, 8),
+                                  blurRadius: 18,
+                                  spreadRadius: -8,
+                                ),
+                              ],
+                            ),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.notifications_none_rounded,
+                              ),
+                              color: const Color(0xFF111111),
+                              tooltip: 'Notifications',
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: isCompact ? 10 : 12),
+                      WelcomeCard(
+                        userName: _userName,
+                        message:
+                            'Today is 27°C. Your top match is a linen shirt + chinos.',
+                        onTap: _showNameEditor,
+                      ),
+                      SizedBox(height: isCompact ? 12 : 16),
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(isCompact ? 16 : 22),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x1A000000),
+                                offset: Offset(0, 14),
+                                blurRadius: 24,
+                                spreadRadius: -12,
+                              ),
+                            ],
+                          ),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 48,
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                        color: colors.primary.withAlpha(20),
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                      child: Icon(
+                                        Icons.workspace_premium_rounded,
+                                        color: colors.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        'Today\'s Outfit',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: theme.textTheme.titleLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w700,
+                                              color: const Color(0xFF151515),
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: isCompact ? 14 : 20),
+                                Text(
+                                  'Sky blue oxford + beige chinos + white sneakers.',
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color(0xFF222222),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Comfort score: 94% • Weather fit: Excellent',
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: const Color(0xFF555555),
+                                  ),
+                                ),
+                                SizedBox(height: isCompact ? 14 : 20),
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(18),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF7F7F7),
+                                    borderRadius: BorderRadius.circular(18),
+                                    border: Border.all(
+                                      color: const Color(0xFFEBEBEB),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'AI Note: Swap to a lightweight overshirt for evening breeze and keep white sneakers for clean contrast.',
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: const Color(0xFF3F3F3F),
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: isCompact ? 14 : 18),
+                                AppButton(
+                                  onPressed: () {},
+                                  label: 'Reshuffle My Outfit',
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  WelcomeCard(
-                    userName: _userName,
-                    message:
-                        'Today is 27°C. Your top match is a linen shirt + chinos.',
-                    onTap: _showNameEditor,
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(22),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x1A000000),
-                            offset: Offset(0, 14),
-                            blurRadius: 24,
-                            spreadRadius: -12,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 48,
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  color: colors.primary.withAlpha(20),
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                child: Icon(
-                                  Icons.workspace_premium_rounded,
-                                  color: colors.primary,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  'Today\'s Outfit',
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF151515),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            'Sky blue oxford + beige chinos + white sneakers.',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF222222),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Comfort score: 94% • Weather fit: Excellent',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: const Color(0xFF555555),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(18),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF7F7F7),
-                              borderRadius: BorderRadius.circular(18),
-                              border: Border.all(
-                                color: const Color(0xFFEBEBEB),
-                              ),
-                            ),
-                            child: Text(
-                              'AI Note: Swap to a lightweight overshirt for evening breeze and keep white sneakers for clean contrast.',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: const Color(0xFF3F3F3F),
-                                height: 1.4,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 50),
-                          SizedBox(
-                            width: double.infinity,
-                            child: AppButton(
-                              onPressed: () {},
-                              label: 'Reshuffle My Outfit',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],
