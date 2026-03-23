@@ -52,6 +52,8 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
 
   Uint8List? _originalImageBytes;
   Uint8List? _processedImageBytes;
+  Uint8List? _removedBgImageBytes;
+  bool _showingOriginal = false;
   bool _isProcessingImage = false;
 
   String _selectedCategory = 'Top';
@@ -194,7 +196,9 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
 
       setState(() {
         _originalImageBytes = bytes;
-        _processedImageBytes = pngBytes ?? bytes;
+        _removedBgImageBytes = pngBytes ?? bytes;
+        _processedImageBytes = _removedBgImageBytes;
+        _showingOriginal = false;
       });
     } catch (_) {
       if (!mounted) {
@@ -362,7 +366,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Clothing item saved.')));
-    Navigator.pushNamed(context, 'added-clothes');
+    Navigator.of(context).popAndPushNamed('/added-clothes');
   }
 
   @override
@@ -393,6 +397,18 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
                             imageBytes: _processedImageBytes,
                             isProcessing: _isProcessingImage,
                             onUploadTap: _showImageSourcePicker,
+                            hasOriginalAvailable:
+                                _originalImageBytes != null &&
+                                _removedBgImageBytes != null,
+                            showingOriginal: _showingOriginal,
+                            onToggleBg: () {
+                              setState(() {
+                                _showingOriginal = !_showingOriginal;
+                                _processedImageBytes = _showingOriginal
+                                    ? _originalImageBytes
+                                    : _removedBgImageBytes;
+                              });
+                            },
                           ),
                           const SizedBox(height: 16),
                           const AddClothesSectionTitle(title: 'Category'),

@@ -7,12 +7,18 @@ class AddClothesImageSection extends StatelessWidget {
   final Uint8List? imageBytes;
   final bool isProcessing;
   final VoidCallback onUploadTap;
+  final bool hasOriginalAvailable;
+  final bool showingOriginal;
+  final VoidCallback? onToggleBg;
 
   const AddClothesImageSection({
     super.key,
     required this.imageBytes,
     required this.isProcessing,
     required this.onUploadTap,
+    this.hasOriginalAvailable = false,
+    this.showingOriginal = false,
+    this.onToggleBg,
   });
 
   @override
@@ -45,11 +51,7 @@ class AddClothesImageSection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       child: Image.memory(imageBytes!, fit: BoxFit.cover),
                     )
-                  : const Center(
-                      child: Text(
-                        'Upload image (background removed after add)',
-                      ),
-                    ),
+                  : const Center(child: Text('Upload image')),
             ),
           ),
           const SizedBox(height: 12),
@@ -57,6 +59,23 @@ class AddClothesImageSection extends StatelessWidget {
             label: hasImage ? 'Replace Image' : 'Upload Image',
             onPressed: onUploadTap,
           ),
+          if (hasOriginalAvailable) ...[
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: onToggleBg,
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Theme.of(context).primaryColor),
+                ),
+                child: Text(
+                  showingOriginal
+                      ? 'Remove Background'
+                      : 'Undo Background Removal',
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

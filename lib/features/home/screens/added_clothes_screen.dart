@@ -98,6 +98,13 @@ class _AddedClothesScreenState extends State<AddedClothesScreen> {
                 return _ClothingCard(
                   item: item,
                   onDelete: () => _deleteCloth(item),
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushNamed('/added-clothes-desc', arguments: item)
+                        .then((_) {
+                          _loadClothes(); // Refresh items if they were updated
+                        });
+                  },
                 );
               },
             ),
@@ -108,8 +115,13 @@ class _AddedClothesScreenState extends State<AddedClothesScreen> {
 class _ClothingCard extends StatelessWidget {
   final ClothingItem item;
   final VoidCallback onDelete;
+  final VoidCallback onTap;
 
-  const _ClothingCard({required this.item, required this.onDelete});
+  const _ClothingCard({
+    required this.item,
+    required this.onDelete,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +140,7 @@ class _ClothingCard extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: GestureDetector(
+        onTap: onTap,
         onLongPress: onDelete,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
