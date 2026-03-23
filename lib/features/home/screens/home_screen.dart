@@ -22,7 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoadingOutfit = true;
   String _aiMessage = '';
   List<ClothingItem> _suggestedItems = [];
-  List<ClothingItem> _allClothes = [];
 
   @override
   void initState() {
@@ -50,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  Future<void> _loadData() async {
+  Future<void> _loadData({bool reshuffle = false}) async {
     setState(() {
       _isLoadingOutfit = true;
     });
@@ -58,13 +57,43 @@ class _HomeScreenState extends State<HomeScreen> {
     final clothes = await _localStorage.getClothes();
 
     if (!mounted) return;
-    setState(() {
-      _allClothes = clothes;
-    });
 
     if (clothes.isNotEmpty) {
-      final suggestion = await _appService.getOutfitSuggestion(clothes);
+      if (!reshuffle) {
+        final savedOutfit = await _localStorage.getDailyOutfit();
+        if (savedOutfit != null) {
+          if (mounted) {
+            setState(() {
+              _aiMessage = savedOutfit['message'];
+              final itemIds = List<String>.from(savedOutfit['items']);
+              _suggestedItems = clothes
+                  .where((c) => itemIds.contains(c.id))
+                  .toList();
+              // In case items were deleted, we ensure we have to reshuffle if Empty.
+              _isLoadingOutfit = false;
+            });
+            // If the saved items are still valid in DB, we use them.
+            if (_suggestedItems.isNotEmpty) {
+              return;
+            }
+          }
+        }
+      }
+
+      final query = reshuffle
+          ? 'Suggest a completely DIFFERENT outfit from before. Make sure it is a new combination of clothes.'
+          : 'What should I wear today?';
+
+      final suggestion = await _appService.getOutfitSuggestion(
+        clothes,
+        query: query,
+      );
+
       if (mounted && suggestion != null) {
+        await _localStorage.saveDailyOutfit(
+          suggestion.message,
+          suggestion.itemIds,
+        );
         setState(() {
           _aiMessage = suggestion.message;
           _suggestedItems = clothes
@@ -379,7 +408,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 AppButton(
                                   onPressed: _isLoadingOutfit
                                       ? () {}
-                                      : _loadData,
+                                      : () => _loadData(reshuffle: true),
                                   label: 'Reshuffle My Outfit',
                                 ),
                               ],

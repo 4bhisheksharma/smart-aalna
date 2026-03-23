@@ -122,6 +122,13 @@ class _AddedClothesScreenState extends State<AddedClothesScreen> {
                 return _ClothingCard(
                   item: item,
                   onDelete: () => _deleteCloth(item),
+                  onToggleLaundry: () async {
+                    final updatedItem = item.copyWith(
+                      inLaundry: !item.inLaundry,
+                    );
+                    await _localStorage.updateCloth(updatedItem);
+                    _loadClothes();
+                  },
                   onTap: () {
                     Navigator.of(context)
                         .pushNamed('/added-clothes-desc', arguments: item)
@@ -140,11 +147,13 @@ class _ClothingCard extends StatelessWidget {
   final ClothingItem item;
   final VoidCallback onDelete;
   final VoidCallback onTap;
+  final VoidCallback onToggleLaundry;
 
   const _ClothingCard({
     required this.item,
     required this.onDelete,
     required this.onTap,
+    required this.onToggleLaundry,
   });
 
   @override
@@ -180,6 +189,19 @@ class _ClothingCard extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
                   ),
+                  if (item.inLaundry)
+                    Container(
+                      color: Colors.white.withAlpha(150),
+                      child: const Center(
+                        child: Text(
+                          'Washing...',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                      ),
+                    ),
                   Positioned(
                     top: 4,
                     left: 4,
@@ -191,21 +213,34 @@ class _ClothingCard extends StatelessWidget {
                       constraints: const BoxConstraints(),
                     ),
                   ),
+                  Positioned(
+                    top: 4,
+                    right: item.isFavorite ? 36 : 4,
+                    child: IconButton(
+                      icon: Icon(
+                        item.inLaundry
+                            ? Icons.local_laundry_service
+                            : Icons.local_laundry_service_outlined,
+                        size: 20,
+                      ),
+                      color: item.inLaundry
+                          ? Colors.blueAccent
+                          : Colors.black54,
+                      onPressed: onToggleLaundry,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ),
                   if (item.isFavorite)
                     Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: const Icon(
-                          Icons.favorite,
-                          size: 16,
-                          color: Colors.redAccent,
-                        ),
+                      top: 4,
+                      right: 4,
+                      child: IconButton(
+                        icon: const Icon(Icons.favorite, size: 20),
+                        color: Colors.redAccent,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () {},
                       ),
                     ),
                 ],

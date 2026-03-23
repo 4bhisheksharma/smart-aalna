@@ -16,27 +16,30 @@ class AppService {
     final apiKey = dotenv.env['APIKEY'];
     if (apiKey == null || apiKey.isEmpty) return null;
 
-    final clothesListStr = clothes.isEmpty
+    final availableClothes = clothes.where((c) => !c.inLaundry).toList();
+
+    final clothesListStr = availableClothes.isEmpty
         ? 'No clothes in wardrobe.'
-        : clothes
+        : availableClothes
               .map(
                 (c) =>
-                    'ID: ${c.id}, Type: ${c.type}, Category: ${c.category}, Season: ${c.season}, Occasion: ${c.occasion}, Color: ${c.colorValue}',
+                    'ID: ${c.id}, Type: ${c.type}, Category: ${c.category}, Season: ${c.season}, Occasion: ${c.occasion}, Color: #${(c.colorValue & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}',
               )
               .join('\n');
 
     final systemPrompt =
         '''
 ${AppUtils.systemPrompt}
-You are a helpful AI stylist. The user may ask for suggestions on what to wear for a specific occasion. 
-Please recommend items they have in their wardrobe. If appropriate, you can also suggest 1-2 new items they don't have yet (as a "cherry on top" suggestion) in your text message.
+You are a helpful AI stylist. The user may ask for suggestions on what to wear for a specific occasion.
+Please recommend items they have in their wardrobe. Analyze the item colors (provided as hex codes) to ensure good color matching and coordination in your suggested outfits.
+If appropriate, you can also suggest 1-2 new items they don't have yet (as a "cherry on top" suggestion) in your text message, explicitly mentioning how the new color/piece fits the styling.
 Always return your response in purely JSON format:
 {
-  "message": "Your styling advice and any new item suggestions to buy.",
+  "message": "Your styling advice explaining the color synergy and outfit vibe, plus any new item suggestions to buy.",
   "items": ["id_1", "id_2"]
 }
 
-Available wardrobe items:
+Available wardrobe items (Excluding items currently in the laundry):
 $clothesListStr
 ''';
 
