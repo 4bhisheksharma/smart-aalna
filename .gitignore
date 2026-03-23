@@ -50,3 +50,8 @@ app.*.map.json
 analysis_options.yaml
 /web
 .env
+
+# Android Production Keystore
+android/key.properties
+android/*.jks
+.vscode/

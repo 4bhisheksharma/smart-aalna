@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:smart_aalna/features/home/model/clothing_item.dart';
@@ -81,7 +82,7 @@ $clothesListStr
         );
       }
     } catch (e) {
-      print('AI Error: $e');
+      debugPrint('AI Error: $e');
     }
     return null;
   }

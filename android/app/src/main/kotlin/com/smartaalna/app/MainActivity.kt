@@ -1,4 +1,4 @@
-package com.example.smart_aalna
+package com.smartaalna.app
 
 import io.flutter.embedding.android.FlutterActivity
 
