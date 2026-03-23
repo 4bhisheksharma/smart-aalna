@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 class ClothingItem {
   final String id;
@@ -12,7 +11,7 @@ class ClothingItem {
   final String pattern;
   final bool isFavorite;
   final String notes;
-  final Uint8List imageData;
+  final String imagePath;
 
   ClothingItem({
     required this.id,
@@ -25,7 +24,7 @@ class ClothingItem {
     required this.pattern,
     required this.isFavorite,
     required this.notes,
-    required this.imageData,
+    required this.imagePath,
   });
 
   Map<String, dynamic> toMap() {
@@ -40,7 +39,7 @@ class ClothingItem {
       'pattern': pattern,
       'isFavorite': isFavorite,
       'notes': notes,
-      'imageData': base64Encode(imageData),
+      'imagePath': imagePath,
     };
   }
 
@@ -56,7 +55,7 @@ class ClothingItem {
       pattern: map['pattern'],
       isFavorite: map['isFavorite'] ?? false,
       notes: map['notes'] ?? '',
-      imageData: base64Decode(map['imageData']),
+      imagePath: map['imagePath'] ?? '',
     );
   }
 

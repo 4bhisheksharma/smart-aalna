@@ -5,7 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:path_provider/path_provider.dart';
 
 import 'package:smart_aalna/core/widgets/app_button.dart';
 import 'package:smart_aalna/core/widgets/add_clothes_header.dart';
@@ -331,9 +333,16 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     }
 
     final notes = _notesController.text.trim();
+    final id = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // Save image to internal storage
+    final directory = await getApplicationDocumentsDirectory();
+    final imagePath = '${directory.path}/cloth_$id.png';
+    final imageFile = File(imagePath);
+    await imageFile.writeAsBytes(_processedImageBytes!);
 
     final item = ClothingItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: id,
       category: _selectedCategory,
       type: _selectedType,
       colorValue: _selectedColor.toARGB32(),
@@ -343,7 +352,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
       pattern: _selectedPattern,
       isFavorite: _isFavorite,
       notes: notes,
-      imageData: _processedImageBytes!,
+      imagePath: imagePath,
     );
 
     await LocalStorage().saveCloth(item);
@@ -353,7 +362,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Clothing item saved.')));
-    Navigator.of(context).pop();
+    Navigator.pushNamed(context, 'added-clothes');
   }
 
   @override

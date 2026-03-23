@@ -22,6 +22,19 @@ class LocalStorage {
     await preferences.setStringList(_clothesKey, clothesJson);
   }
 
+  Future<void> deleteCloth(String id) async {
+    final preferences = await SharedPreferences.getInstance();
+    final List<String> clothesJson =
+        preferences.getStringList(_clothesKey) ?? [];
+
+    final updatedList = clothesJson.where((jsonStr) {
+      final item = ClothingItem.fromJson(jsonStr);
+      return item.id != id;
+    }).toList();
+
+    await preferences.setStringList(_clothesKey, updatedList);
+  }
+
   Future<String?> getHomeUserName() async {
     final preferences = await SharedPreferences.getInstance();
     final savedName = preferences.getString(_homeUserNameKey);

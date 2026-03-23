@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:smart_aalna/features/home/model/clothing_item.dart';
 import 'package:smart_aalna/core/storage/local_storage.dart';
@@ -30,6 +31,42 @@ class _AddedClothesScreenState extends State<AddedClothesScreen> {
     }
   }
 
+  Future<void> _deleteCloth(ClothingItem item) async {
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Clothing'),
+          content: const Text('Are you sure you want to remove this item?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: TextButton.styleFrom(iconColor: Colors.red),
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      await _localStorage.deleteCloth(item.id);
+      try {
+        final file = File(item.imagePath);
+        if (await file.exists()) {
+          await file.delete();
+        }
+      } catch (e) {
+        debugPrint('Error deleting image file: $e');
+      }
+      _loadClothes();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +95,10 @@ class _AddedClothesScreenState extends State<AddedClothesScreen> {
               itemCount: _clothes.length,
               itemBuilder: (context, index) {
                 final item = _clothes[index];
-                return _ClothingCard(item: item);
+                return _ClothingCard(
+                  item: item,
+                  onDelete: () => _deleteCloth(item),
+                );
               },
             ),
     );
@@ -67,8 +107,9 @@ class _AddedClothesScreenState extends State<AddedClothesScreen> {
 
 class _ClothingCard extends StatelessWidget {
   final ClothingItem item;
+  final VoidCallback onDelete;
 
-  const _ClothingCard({required this.item});
+  const _ClothingCard({required this.item, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -86,88 +127,105 @@ class _ClothingCard extends StatelessWidget {
         ],
       ),
       clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  color: Color(item.colorValue).withValues(alpha: 0.1),
-                  child: Image.memory(item.imageData, fit: BoxFit.contain),
-                ),
-                if (item.isFavorite)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                      child: const Icon(
-                        Icons.favorite,
-                        size: 16,
-                        color: Colors.redAccent,
-                      ),
+      child: GestureDetector(
+        onLongPress: onDelete,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Container(
+                    color: Color(item.colorValue).withValues(alpha: 0.1),
+                    child: Image.file(
+                      File(item.imagePath),
+                      fit: BoxFit.contain,
                     ),
                   ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        item.type,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                  Positioned(
+                    top: 4,
+                    left: 4,
+                    child: IconButton(
+                      icon: const Icon(Icons.delete_outline, size: 20),
+                      color: Colors.black54,
+                      onPressed: onDelete,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                     ),
-                    Container(
-                      width: 14,
-                      height: 14,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(item.colorValue),
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                          width: 1,
+                  ),
+                  if (item.isFavorite)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: const Icon(
+                          Icons.favorite,
+                          size: 16,
+                          color: Colors.redAccent,
                         ),
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${item.category} • ${item.size}',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  item.occasion,
-                  style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          item.type,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Container(
+                        width: 14,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(item.colorValue),
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${item.category} • ${item.size}',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    item.occasion,
+                    style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
