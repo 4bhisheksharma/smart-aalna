@@ -1,7 +1,26 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_aalna/features/home/model/clothing_item.dart';
 
 class LocalStorage {
   static const String _homeUserNameKey = 'home_user_name';
+  static const String _clothesKey = 'saved_clothes';
+
+  Future<List<ClothingItem>> getClothes() async {
+    final preferences = await SharedPreferences.getInstance();
+    final List<String>? clothesJson = preferences.getStringList(_clothesKey);
+    if (clothesJson == null) return [];
+    return clothesJson
+        .map((jsonStr) => ClothingItem.fromJson(jsonStr))
+        .toList();
+  }
+
+  Future<void> saveCloth(ClothingItem item) async {
+    final preferences = await SharedPreferences.getInstance();
+    final List<String> clothesJson =
+        preferences.getStringList(_clothesKey) ?? [];
+    clothesJson.add(item.toJson());
+    await preferences.setStringList(_clothesKey, clothesJson);
+  }
 
   Future<String?> getHomeUserName() async {
     final preferences = await SharedPreferences.getInstance();

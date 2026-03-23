@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:smart_aalna/core/widgets/app_button.dart';
@@ -13,6 +12,8 @@ import 'package:smart_aalna/core/widgets/add_clothes_header.dart';
 import 'package:smart_aalna/core/widgets/color_selector.dart';
 import 'package:smart_aalna/core/widgets/image_section.dart';
 import 'package:smart_aalna/core/widgets/section_title.dart';
+import 'package:smart_aalna/features/home/model/clothing_item.dart';
+import 'package:smart_aalna/core/storage/local_storage.dart';
 
 class AddClothesScreen extends StatefulWidget {
   const AddClothesScreen({super.key});
@@ -201,12 +202,11 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
         const SnackBar(content: Text('Could not process selected image.')),
       );
     } finally {
-      if (!mounted) {
-        return;
+      if (mounted) {
+        setState(() {
+          _isProcessingImage = false;
+        });
       }
-      setState(() {
-        _isProcessingImage = false;
-      });
     }
   }
 
@@ -311,7 +311,7 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
     });
   }
 
-  void _saveCloth() {
+  Future<void> _saveCloth() async {
     final occasion = _selectedOccasion == 'Other'
         ? _otherOccasionController.text.trim()
         : _selectedOccasion;
@@ -330,9 +330,30 @@ class _AddClothesScreenState extends State<AddClothesScreen> {
       return;
     }
 
+    final notes = _notesController.text.trim();
+
+    final item = ClothingItem(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      category: _selectedCategory,
+      type: _selectedType,
+      colorValue: _selectedColor.toARGB32(),
+      size: _selectedSize,
+      occasion: occasion,
+      season: _selectedSeason,
+      pattern: _selectedPattern,
+      isFavorite: _isFavorite,
+      notes: notes,
+      imageData: _processedImageBytes!,
+    );
+
+    await LocalStorage().saveCloth(item);
+
+    if (!mounted) return;
+
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Clothing item saved.')));
+    Navigator.of(context).pop();
   }
 
   @override
