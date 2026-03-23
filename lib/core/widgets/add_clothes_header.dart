@@ -39,10 +39,10 @@ class AddClothesHeader extends StatelessWidget {
             ],
           ),
           child: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_none_rounded),
+            onPressed: () => Navigator.of(context).pushNamed('/added-clothes'),
+            icon: const Icon(Icons.local_laundry_service),
             color: const Color(0xFF111111),
-            tooltip: 'Notifications',
+            tooltip: 'Added Clothes',
           ),
         ),
       ],

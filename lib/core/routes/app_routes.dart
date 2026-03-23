@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:smart_aalna/features/home/screens/add_clothes_screen.dart';
+import 'package:smart_aalna/features/home/screens/added_clothes_screen.dart';
 import 'package:smart_aalna/features/home/screens/home_screen.dart';
 
 class AppRoutes {
   static const String home = '/';
   static const String addClothes = '/add-clothes';
   static const String customerHome = '/customer-home';
+  static const String addedClothes = '/added-clothes';
 }
 
 class AppRouter {
@@ -21,6 +23,12 @@ class AppRouter {
       case AppRoutes.addClothes:
         return MaterialPageRoute(
           builder: (_) => const AddClothesScreen(),
+          settings: settings,
+        );
+
+      case AppRoutes.addedClothes:
+        return MaterialPageRoute(
+          builder: (_) => const AddedClothesScreen(),
           settings: settings,
         );
 
