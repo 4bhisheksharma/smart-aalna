@@ -30,11 +30,23 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadUserName();
     _loadData();
     LocalStorage.clothesUpdateNotifier.addListener(_loadData);
+    LocalStorage.userNameNotifier.addListener(_onUserNameChanged);
+  }
+
+  void _onUserNameChanged() {
+    if (mounted) {
+      setState(() {
+        _userName = LocalStorage.userNameNotifier.value.isNotEmpty
+            ? LocalStorage.userNameNotifier.value
+            : 'User';
+      });
+    }
   }
 
   @override
   void dispose() {
     LocalStorage.clothesUpdateNotifier.removeListener(_loadData);
+    LocalStorage.userNameNotifier.removeListener(_onUserNameChanged);
     super.dispose();
   }
 
@@ -175,6 +187,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Row(
                         children: [
+                          Image.asset(
+                            'assets/smart-aalna-logo-bw.png',
+                            width: 36,
+                            height: 36,
+                          ),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               'Smart आल्ना',

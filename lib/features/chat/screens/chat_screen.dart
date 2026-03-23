@@ -123,7 +123,7 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: const Color(0xFFF6F6F6),
       appBar: AppBar(
         title: const Text(
-          'Chat with Aalna',
+          'Chat with आल्ना AI',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         backgroundColor: Colors.transparent,

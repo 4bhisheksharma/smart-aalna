@@ -7,6 +7,9 @@ class LocalStorage {
   static const String _clothesKey = 'saved_clothes';
 
   static final ValueNotifier<int> clothesUpdateNotifier = ValueNotifier<int>(0);
+  static final ValueNotifier<String> userNameNotifier = ValueNotifier<String>(
+    '',
+  );
 
   Future<List<ClothingItem>> getClothes() async {
     final preferences = await SharedPreferences.getInstance();
@@ -64,5 +67,6 @@ class LocalStorage {
 
     final preferences = await SharedPreferences.getInstance();
     await preferences.setString(_homeUserNameKey, cleanedName);
+    userNameNotifier.value = cleanedName;
   }
 }

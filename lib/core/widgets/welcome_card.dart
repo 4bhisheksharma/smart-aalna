@@ -18,13 +18,13 @@ class WelcomeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(28),
+      borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(20),
         child: Ink(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(20),
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -34,9 +34,9 @@ class WelcomeCard extends StatelessWidget {
             boxShadow: const [
               BoxShadow(
                 color: Color(0x44000000),
-                offset: Offset(0, 14),
-                blurRadius: 28,
-                spreadRadius: -8,
+                offset: Offset(0, 10),
+                blurRadius: 20,
+                spreadRadius: -6,
               ),
             ],
           ),
@@ -45,36 +45,33 @@ class WelcomeCard extends StatelessWidget {
               Positioned(
                 right: -16,
                 top: -18,
-                child: _GlowCircle(
-                  size: 110,
-                  color: Colors.white.withAlpha(46),
-                ),
+                child: _GlowCircle(size: 90, color: Colors.white.withAlpha(46)),
               ),
               Positioned(
                 left: -20,
                 bottom: -26,
-                child: _GlowCircle(size: 90, color: Colors.white.withAlpha(20)),
+                child: _GlowCircle(size: 70, color: Colors.white.withAlpha(20)),
               ),
               Padding(
-                padding: const EdgeInsets.all(22),
+                padding: const EdgeInsets.all(16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 52,
-                      height: 52,
+                      width: 42,
+                      height: 42,
                       decoration: BoxDecoration(
                         color: Colors.white.withAlpha(20),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: Colors.white.withAlpha(51)),
                       ),
                       child: const Icon(
                         Icons.waving_hand_rounded,
                         color: Colors.white,
-                        size: 28,
+                        size: 24,
                       ),
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,26 +92,26 @@ class WelcomeCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 28,
+                              fontSize: 22,
                               fontWeight: FontWeight.w800,
-                              height: 1.05,
+                              height: 1.1,
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 6),
                           Text(
                             message,
                             style: const TextStyle(
                               color: Color(0xFFE8E8E8),
-                              fontSize: 14,
-                              height: 1.4,
+                              fontSize: 13,
+                              height: 1.3,
                             ),
                           ),
                           if (onTap != null) ...[
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 12),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
+                                horizontal: 10,
+                                vertical: 6,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withAlpha(20),
@@ -124,7 +121,7 @@ class WelcomeCard extends StatelessWidget {
                                 'Tap to Change Name',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
