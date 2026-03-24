@@ -150,26 +150,25 @@ class _AddedClothesDescScreeState extends State<AddedClothesDescScree> {
 
   Future<void> _pickImage(ImageSource source) async {
     try {
-      final file = await _picker.pickImage(source: source, imageQuality: 92);
+      final file = await _picker.pickImage(
+        source: source,
+        imageQuality: 85,
+        maxWidth: 1024,
+        maxHeight: 1024,
+      );
       if (file == null) return;
 
       setState(() => _isProcessingImage = true);
 
       final bytes = await file.readAsBytes();
-      final removedBgImage = await BackgroundRemover.instance.removeBg(bytes);
-      final byteData = await removedBgImage.toByteData(
-        format: ui.ImageByteFormat.png,
-      );
-      final pngBytes = byteData?.buffer.asUint8List();
-      removedBgImage.dispose();
 
       if (!mounted) return;
 
       setState(() {
         _originalImageBytes = bytes;
-        _removedBgImageBytes = pngBytes ?? bytes;
-        _newImageBytes = _removedBgImageBytes;
-        _showingOriginal = false;
+        _removedBgImageBytes = null;
+        _newImageBytes = bytes;
+        _showingOriginal = true;
       });
     } catch (_) {
       if (!mounted) return;
@@ -178,6 +177,46 @@ class _AddedClothesDescScreeState extends State<AddedClothesDescScree> {
       );
     } finally {
       if (mounted) setState(() => _isProcessingImage = false);
+    }
+  }
+
+  Future<void> _toggleOrRemoveBackground() async {
+    if (_originalImageBytes == null) return;
+
+    if (_showingOriginal && _removedBgImageBytes == null) {
+      setState(() => _isProcessingImage = true);
+      try {
+        final removedBgImage = await BackgroundRemover.instance.removeBg(
+          _originalImageBytes!,
+        );
+        final byteData = await removedBgImage.toByteData(
+          format: ui.ImageByteFormat.png,
+        );
+        final pngBytes = byteData?.buffer.asUint8List();
+        removedBgImage.dispose();
+
+        if (!mounted) return;
+
+        setState(() {
+          _removedBgImageBytes = pngBytes ?? _originalImageBytes;
+          _newImageBytes = _removedBgImageBytes;
+          _showingOriginal = false;
+        });
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not remove background: $e')),
+        );
+      } finally {
+        if (mounted) setState(() => _isProcessingImage = false);
+      }
+    } else {
+      setState(() {
+        _showingOriginal = !_showingOriginal;
+        _newImageBytes = _showingOriginal
+            ? _originalImageBytes
+            : _removedBgImageBytes;
+      });
     }
   }
 
@@ -311,24 +350,16 @@ class _AddedClothesDescScreeState extends State<AddedClothesDescScree> {
                     label: const Text('Change Image'),
                   ),
                 ),
-                if (_originalImageBytes != null &&
-                    _removedBgImageBytes != null) ...[
+                if (_originalImageBytes != null) ...[
                   const SizedBox(width: 8),
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: Theme.of(context).primaryColor),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _showingOriginal = !_showingOriginal;
-                          _newImageBytes = _showingOriginal
-                              ? _originalImageBytes
-                              : _removedBgImageBytes;
-                        });
-                      },
+                      onPressed: _toggleOrRemoveBackground,
                       child: Text(
-                        _showingOriginal ? 'Remove BG' : 'Undo BG Removal',
+                        _showingOriginal ? 'Remove BG' : 'Show Original',
                         textAlign: TextAlign.center,
                       ),
                     ),

@@ -66,7 +66,7 @@ class AddClothesImageSection extends StatelessWidget {
             label: hasImage ? 'Replace Image' : 'Upload Image',
             onPressed: onUploadTap,
           ),
-          if (hasOriginalAvailable) ...[
+          if (hasImage) ...[
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
@@ -76,9 +76,7 @@ class AddClothesImageSection extends StatelessWidget {
                   side: BorderSide(color: Theme.of(context).primaryColor),
                 ),
                 child: Text(
-                  showingOriginal
-                      ? 'Remove Background'
-                      : 'Undo Background Removal',
+                  showingOriginal ? 'Remove Background' : 'Show Original',
                 ),
               ),
             ),
